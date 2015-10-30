@@ -145,14 +145,6 @@ class Tx_Formhandler_AjaxHandler_Jquery extends Tx_Formhandler_AbstractAjaxHandl
 							window.location.href = data.redirect;
 						} else {
 							form.closest(".Tx-Formhandler").replaceWith(data.form);
-							' . $this->jQueryAlias . '("' . $this->submitButtonSelector . '").on("click", function(e) {
-								e.preventDefault();
-								submitButtonClick_' . $this->globals->getRandomID() . '(' . $this->jQueryAlias . '(this));
-							});
-							' . $this->jQueryAlias . '("' . $this->formSelector . '").on("submit", function(e) {
-								e.preventDefault();
-								return false;
-							});
 							attachValidationEvents_' . $this->globals->getRandomID() . '();
 							' . $ajaxSubmitCallbackJS . '
 						}
@@ -161,13 +153,19 @@ class Tx_Formhandler_AjaxHandler_Jquery extends Tx_Formhandler_AbstractAjaxHandl
 				return false;
 			}
 
-			' . $this->jQueryAlias . '("' . $this->formSelector . '").on("submit", function(e) {
-				e.preventDefault();
-				return false;
+			' . $this->jQueryAlias . '("body").on("submit", "' . $this->formSelector . '", function(e) {
+				var jRandomID = ' . $this->jQueryAlias . '(this).parents("form").find("input[name=\"' . $this->globals->getFormValuesPrefix() . '[randomID]\"]");
+				if (jRandomID.length && (jRandomID.val() == "' . $this->globals->getRandomID() . '")) {
+					e.preventDefault();
+					return false;
+				}
 			});
-			' . $this->jQueryAlias . '("' . $this->submitButtonSelector . '").on("click", function(e) {
-				e.preventDefault();
-				submitButtonClick_' . $this->globals->getRandomID() . '(' . $this->jQueryAlias . '(this));
+			' . $this->jQueryAlias . '("body").on("click", "' . $this->submitButtonSelector . '", function(e) {
+				var jRandomID = ' . $this->jQueryAlias . '(this).parents("form").find("input[name=\"' . $this->globals->getFormValuesPrefix() . '[randomID]\"]");
+				if (jRandomID.length && (jRandomID.val() == "' . $this->globals->getRandomID() . '")) {
+					e.preventDefault();
+					submitButtonClick_' . $this->globals->getRandomID() . '(' . $this->jQueryAlias . '(this));
+				}
 			});';
 		}
 		if(strlen($js) > 0) {
