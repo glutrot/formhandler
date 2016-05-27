@@ -531,7 +531,7 @@ class Tx_Formhandler_View_Form extends Tx_Formhandler_AbstractView {
 		}
 		if($this->gp['formToken']) {
 			$markers['###HIDDEN_FIELDS###'] .= '
-				<input type="hidden" name="' . $name . '" value="' . $this->gp['formToken'] . '" />
+				<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($this->gp['formToken']) . '" />
 			';
 		}
 
